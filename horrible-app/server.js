@@ -18,6 +18,10 @@ app.use((req,res,next)=>{
 // the landing endpoint
 app.get('/', (req,res)=>{
     const hostname = os.hostname();
+    console.log(`[${hostname}] GET / - Home page requested`);
+    console.log(`Request from: ${req.ip}`);
+    console.log(`User-Agent: ${req.get('user-agent')}`);
+    console.log('---');
     res.send(`
         <html>
         <head>
@@ -80,7 +84,10 @@ app.get('/', (req,res)=>{
 
 // crash endpoint
 app.get('/crash',(req,res)=>{
-    console.log("Crashing the server");
+    const hostname = os.hostname();
+    console.log(`[${hostname}] GET /crash - Server crash initiated`);
+    console.log(`Request from: ${req.ip}`);
+    console.log('---');
     res.send("Crashing the server now");
     setTimeout(() => {
         process.exit(1);
@@ -89,21 +96,30 @@ app.get('/crash',(req,res)=>{
 
 // freeze endpoint
 app.get('/freeze',(req,res)=>{
-    console.log("Freezing the server");
+    const hostname = os.hostname();
+    console.log(`[${hostname}] GET /freeze - Server freeze initiated`);
+    console.log(`Request from: ${req.ip}`);
+    console.log('---');
     res.send("Freezing the server");
     while (true){}
 });
 
 //mute endpoint
 app.get('/mute',(req,res)=>{
-    console.log("Muting the server");
+    const hostname = os.hostname();
+    console.log(`[${hostname}] GET /mute - Server mute initiated`);
+    console.log(`Request from: ${req.ip}`);
+    console.log('---');
     mute=true;
     res.send("Muting the server");
 });
 
 // 5. HEAVY CALCULATION (will take 10 seconds)
 app.get('/heavy', (req, res) => {
-    console.log("Heavy calculation started");
+    const hostname = os.hostname();
+    console.log(`[${hostname}] GET /heavy - Heavy calculation started`);
+    console.log(`Request from: ${req.ip}`);
+    console.log('---');
     const start = Date.now();
     
     crypto.pbkdf2('secret', 'salt', 5000000, 64, 'sha512', (err, derivedKey) => {

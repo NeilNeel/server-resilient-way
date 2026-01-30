@@ -1,0 +1,12 @@
+services:
+  app:
+    build: ./horrible-app
+    deploy:
+      replicas: 3
+
+  lb:
+    image: caddy
+    ports:
+      - "8888:80"
+    volumes:
+      - ./lb/Caddyfile:/etc/caddy/Caddyfile:ro
