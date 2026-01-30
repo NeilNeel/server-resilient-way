@@ -30,7 +30,7 @@ services:
       start_period: 10s
 
   lb:
-    image: caddy
+    build: ./lb
     restart: unless-stopped
     ports:
       - "8888:80"
