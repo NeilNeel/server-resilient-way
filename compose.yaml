@@ -1,11 +1,13 @@
 services:
   app:
     build: ./horrible-app
+    restart: unless-stopped
     deploy:
       replicas: 3
 
   lb:
     image: caddy
+    restart: unless-stopped
     ports:
       - "8888:80"
     volumes:
