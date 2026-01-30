@@ -1,6 +1,6 @@
 :80
 
-respond /health-check 200 "OK
+respond /health-check "OK"
 
 reverse_proxy {
     dynamic a {
@@ -9,13 +9,14 @@ reverse_proxy {
         refresh "1s"
     }
 
-    lb_retries 1
-    lb_try_duration "12s"
+    lb_retries 3
+    lb_try_duration "15s"
+    lb_try_interval "1s"
 
     transport http {
-        dial_timeout "3s"
-        write_timeout "3s"
-        read_timeout "3s"
-        response_header_timeout "3s"
+        dial_timeout "5s"
+        write_timeout "5s"
+        read_timeout "5s"
+        response_header_timeout "5s"
     }
 }

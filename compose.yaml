@@ -7,8 +7,8 @@ services:
     deploy:
       replicas: 3
     healthcheck:
-      test: ["CMD","curl -f http://localhost:3000 || exit 1"]
-      interval: 1m
+      test: curl -f http://localhost:3000 || exit 1
+      interval: 15s
       timeout: 10s
       retries: 3
       start_period: 10s
@@ -22,13 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - AUTOHEAL_CONTAINER_LABEL=com.example.node-app
-    healthcheck:
-      test: ["CMD", "curl -f http://localhost/health-check || exit 1"]
-      interval: 1m
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
+    
   lb:
     build: ./lb
     restart: unless-stopped
@@ -36,3 +30,10 @@ services:
       - "8888:80"
     volumes:
       - ./lb/Caddyfile:/etc/caddy/Caddyfile:ro
+    healthcheck:
+      test: curl -f http://localhost/health-check || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+

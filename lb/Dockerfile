@@ -1,3 +1,3 @@
 FROM caddy
 
-RUN apt install -y curl
+RUN apk add curl
