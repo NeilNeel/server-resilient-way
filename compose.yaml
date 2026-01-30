@@ -2,8 +2,32 @@ services:
   app:
     build: ./horrible-app
     restart: unless-stopped
+    labels:
+      - com.example.node-app=true
     deploy:
       replicas: 3
+    healthcheck:
+      test: ["CMD","curl -f http://localhost:3000 || exit 1"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  autoheal:
+    image: willfarrell/autoheal
+    restart: always
+    labels:
+      - com.example.node-app=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=com.example.node-app
+    healthcheck:
+      test: ["CMD", "curl -f http://localhost/health-check || exit 1"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   lb:
     image: caddy

@@ -1,9 +1,21 @@
 :80
 
+respond /health-check 200 "OK
+
 reverse_proxy {
     dynamic a {
         name app
         port 3000
         refresh "1s"
+    }
+
+    lb_retries 1
+    lb_try_duration "12s"
+
+    transport http {
+        dial_timeout "3s"
+        write_timeout "3s"
+        read_timeout "3s"
+        response_header_timeout "3s"
     }
 }
