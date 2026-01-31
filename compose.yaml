@@ -16,8 +16,6 @@ services:
   autoheal:
     image: willfarrell/autoheal
     restart: always
-    labels:
-      - com.example.node-app=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
@@ -25,6 +23,8 @@ services:
     
   lb:
     build: ./lb
+    labels:
+      - com.example.node-app=true
     restart: unless-stopped
     ports:
       - "8888:80"
