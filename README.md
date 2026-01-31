@@ -25,9 +25,11 @@ A production-ready, self-healing Node.js application with load balancing, automa
 
 ![Architecture Diagram](./img/architecture.png)
 
+> **Note**: The architecture diagram shows the production setup with Cloudflare and custom domain. For security reasons, screenshots in this README use the local development setup (localhost:8888).
+
 **Key Components:**
-- **Cloudflare**: SSL/TLS termination, sends HTTP to origin
-- **Azure VM**: Hosts all Docker containers
+- **Cloudflare**: SSL/TLS termination, sends HTTP to origin (production only)
+- **Azure VM**: Hosts all Docker containers (production) / Local Docker (development)
 - **Caddy Load Balancer**: Distributes traffic across 3 app replicas
 - **Node.js Apps**: 3 replicas for high availability
 - **Autoheal**: Monitors and restarts unhealthy containers
@@ -71,19 +73,43 @@ A production-ready, self-healing Node.js application with load balancing, automa
    cd server-resilient-way
    ```
 
-2. **Update port mapping for production**
+2. **Update configuration for production**
    
-   Edit `compose.yaml` and change the lb port mapping:
+   **a) Update port mapping in `compose.yaml`:**
    ```yaml
-   ports:
-     - "80:80"  # Instead of "8888:80" for local
+   lb:
+     ports:
+       - "80:80"  # Change from "8888:80" for production
    ```
+   
+   **b) Update Caddyfile for custom domain (optional):**
+   
+   Edit `lb/Caddyfile` - change the first line:
+   ```caddyfile
+   http://your-domain.com  # Change from ":80" for custom domain
+   ```
+   
+   > ⚠️ **Security Note**: Never commit your actual domain name to public repositories if you want to keep it private. Use environment variables or keep this change local to your server.
 
 3. **Build and deploy**
    ```bash
    docker compose build --no-cache
    docker compose up -d
    ```
+
+## 📝 Configuration Summary
+
+### Local Development Setup
+- **Caddyfile**: `:80` (listens on all interfaces)
+- **Port Mapping**: `8888:80` (access via localhost:8888)
+- **Domain**: Not required
+- **Cloudflare**: Not required
+
+### Production Server Setup
+- **Caddyfile**: `:80` (without custom domain) OR `http://your-domain.com` (with custom domain)
+- **Port Mapping**: `80:80` (standard HTTP port)
+- **Domain**: Optional, configure via Cloudflare
+- **Cloudflare**: Required for custom domain with SSL
 
 ## 🌐 Domain Configuration
 
